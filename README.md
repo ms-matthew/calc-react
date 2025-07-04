@@ -19,19 +19,19 @@ Stylowy, animowany kalkulator stworzony w React z użyciem Tailwind CSS.
 - 🧠 **useReducer** – do zarządzania logiką kalkulatora
 
 ## 📁 Struktura plików
-
+```
 src/
 ├── Calc.jsx # Główny komponent aplikacji
 ├── Button.jsx # Komponent cyfr
 ├── OperationButton.jsx # Komponent przycisków operacji
 ├── index.css # Style globalne (Tailwind)
 ├── main.jsx # Punkt wejścia aplikacji
-
+```
 ## ▶️ Uruchomienie projektu lokalnie
 
 
 ```bash
-git clone https://github.com/ms-matthew/react-calculator.git
+git clone https://github.com/ms-matthew/calc-react.git
 cd react-calculator
 npm install
 npm run dev
