@@ -32,7 +32,7 @@ src/
 
 ```bash
 git clone https://github.com/ms-matthew/calc-react.git
-cd react-calculator
+cd calc-react
 npm install
 npm run dev
 ```
