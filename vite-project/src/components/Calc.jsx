@@ -11,35 +11,33 @@ export const ACTIONS = {
     EVALUATE: 'evaluate'
 }
 
-function reducer(state, {type, payload}){
-    switch(type){
+function reducer(state, { type, payload }) {
+    switch (type) {
         case ACTIONS.ADD_DIGIT:
-            if(state.overwrite){
+            if (state.overwrite) {
                 return {
                     ...state,
                     currentOperand: payload.digit,
                     overwrite: false
                 }
             }
-            if(payload.digit === "0" && state.currentOperand === "0") return state
-            if(payload.digit === "." && state.currentOperand.includes(".")) return state
+            if (payload.digit === "0" && state.currentOperand === "0") return state
+            if (payload.digit === "." && state.currentOperand?.includes(".")) return state
 
-            return{
+            return {
                 ...state,
                 currentOperand: `${state.currentOperand || ""}${payload.digit}`
             }
+
         case ACTIONS.CHOOSE_OPERATION:
-            if(state.currentOperand == null && state.previousOperand == null){
-                return state
-            }
-            if(state.currentOperand == null){
+            if (state.currentOperand == null && state.previousOperand == null) return state
+            if (state.currentOperand == null) {
                 return {
                     ...state,
                     operation: payload.operation
                 }
             }
-
-            if(state.previousOperand == null){
+            if (state.previousOperand == null) {
                 return {
                     ...state,
                     operation: payload.operation,
@@ -55,18 +53,15 @@ function reducer(state, {type, payload}){
             }
 
         case ACTIONS.DELETE_DIGIT:
-            if(state.overwrite){
+            if (state.overwrite) {
                 return {
                     ...state,
                     overwrite: false,
                     currentOperand: null
                 }
             }
-            if(state.currentOperand == null){
-                return state
-            }
-
-            if(state.currentOperand.length === 1){
+            if (state.currentOperand == null) return state
+            if (state.currentOperand.length === 1) {
                 return {
                     ...state,
                     currentOperand: null
@@ -78,10 +73,14 @@ function reducer(state, {type, payload}){
             }
 
         case ACTIONS.CLEAR:
-            return{}
+            return {}
 
         case ACTIONS.EVALUATE:
-            if(state.operation == null || state.currentOperand == null || state.previousOperand == null){
+            if (
+                state.operation == null ||
+                state.currentOperand == null ||
+                state.previousOperand == null
+            ) {
                 return state
             }
             return {
@@ -94,12 +93,12 @@ function reducer(state, {type, payload}){
     }
 }
 
-function evaluate({currentOperand, previousOperand, operation}){
+function evaluate({ currentOperand, previousOperand, operation }) {
     const prev = parseFloat(previousOperand)
     const current = parseFloat(currentOperand)
-    if(isNaN(prev)||isNaN(current)) return ""
+    if (isNaN(prev) || isNaN(current)) return ""
     let computation = ""
-    switch(operation){
+    switch (operation) {
         case "+":
             computation = prev + current
             break
@@ -120,75 +119,71 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
     maximumFractionDigits: 0,
 })
 
-function formatOperand(operand){
-    if(operand == null) return
-    const[integer, decimal] = operand.split(".")
-    if(decimal == null) return INTEGER_FORMATTER.format(integer)
+function formatOperand(operand) {
+    if (operand == null) return
+    const [integer, decimal] = operand.split(".")
+    if (decimal == null) return INTEGER_FORMATTER.format(integer)
     return `${INTEGER_FORMATTER.format(integer)}.${decimal}`
 }
 
 const Calc = () => {
+    const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(reducer, {})
 
-    const [{currentOperand, previousOperand, operation}, dispatch] = useReducer(reducer, {})
-  return (
-    <main>
-        <div className='flex items-center justify-center bg-[#B2D8CE] h-screen'>
-            <motion.div id='output'
-                 initial={{ opacity: 0, scale: 0 }}
+    return (
+        <main className="min-h-screen bg-[#B2D8CE] flex items-center justify-center p-4">
+            <motion.div
+                id="output"
+                className="w-[90vw] max-w-md"
+                initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
                     duration: 0.4,
                     scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
                 }}
             >
-                    <div id='current-operand' className='border p-3 text-3xl font-mono flex flex-col justify-center items-end min-h-30 rounded-xl bg-[#648DB3]'>
-                        <div className='text-gray-600'>{formatOperand(previousOperand)} {operation}</div>
-                        <div>
-                            {formatOperand(currentOperand)}
-                        </div>
-                        
-                    </div>
+                <div id="current-operand" className="border p-3 text-base sm:text-xl md:text-3xl font-mono flex flex-col justify-center items-end min-h-24 rounded-xl bg-[#648DB3] break-all">
+                    <div className="text-gray-600">{formatOperand(previousOperand)} {operation}</div>
+                    <div>{formatOperand(currentOperand)}</div>
+                </div>
 
-                <div className='p-2 gap-2 grid grid-cols-4 h-150 min-w-120 justify-center items-center bg-[#52357B] rounded-xl border'>
-                    <motion.button 
+                <div className="md:h-[50vh] p-2 gap-2 grid grid-cols-4 w-full h-auto bg-[#52357B] rounded-xl border mt-2">
+                    <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className='col-span-2 shadow-xl border text-3xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]'
-                        onClick={() => dispatch({ type: ACTIONS.CLEAR})}
+                        className="col-span-2 shadow-xl border text-base sm:text-xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
+                        onClick={() => dispatch({ type: ACTIONS.CLEAR })}
                     >AC</motion.button>
-                    <motion.button 
+                    <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className='shadow-xl border text-3xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]'
-                        onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT})}
+                        className="shadow-xl border text-base sm:text-xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
+                        onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}
                     >DEL</motion.button>
-                    <OperationButton dispatch={dispatch} operation={"/"}/>
-                    <Button dispatch={dispatch} digit={"1"}></Button>
-                    <Button dispatch={dispatch} digit={"2"}></Button>
-                    <Button dispatch={dispatch} digit={"3"}></Button>
-                    <OperationButton dispatch={dispatch} operation={"X"}></OperationButton>
-                    <Button dispatch={dispatch} digit={"4"}></Button>
-                    <Button dispatch={dispatch} digit={"5"}></Button>
-                    <Button dispatch={dispatch} digit={"6"}></Button>
-                    <OperationButton dispatch={dispatch} operation={"+"}></OperationButton>
-                    <Button dispatch={dispatch} digit={"7"}></Button>
-                    <Button dispatch={dispatch} digit={"8"}></Button>
-                    <Button dispatch={dispatch} digit={"9"}></Button>
-                    <OperationButton dispatch={dispatch} operation={"-"}></OperationButton>
-                    <Button dispatch={dispatch} digit={"."}></Button>
-                    <Button dispatch={dispatch} digit={"0"}></Button>
-                    <motion.button 
+                    <OperationButton dispatch={dispatch} operation="/" />
+                    <Button dispatch={dispatch} digit="1" />
+                    <Button dispatch={dispatch} digit="2" />
+                    <Button dispatch={dispatch} digit="3" />
+                    <OperationButton dispatch={dispatch} operation="X" />
+                    <Button dispatch={dispatch} digit="4" />
+                    <Button dispatch={dispatch} digit="5" />
+                    <Button dispatch={dispatch} digit="6" />
+                    <OperationButton dispatch={dispatch} operation="+" />
+                    <Button dispatch={dispatch} digit="7" />
+                    <Button dispatch={dispatch} digit="8" />
+                    <Button dispatch={dispatch} digit="9" />
+                    <OperationButton dispatch={dispatch} operation="-" />
+                    <Button dispatch={dispatch} digit="." />
+                    <Button dispatch={dispatch} digit="0" />
+                    <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className='col-span-2 shadow-xl border text-3xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]'
-                        onClick={() => dispatch({ type: ACTIONS.EVALUATE})}
+                        className="col-span-2 shadow-xl border text-base sm:text-xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
+                        onClick={() => dispatch({ type: ACTIONS.EVALUATE })}
                     >=</motion.button>
                 </div>
             </motion.div>
-        </div>
-            
-    </main>
-  )
+        </main>
+    )
 }
 
 export default Calc
