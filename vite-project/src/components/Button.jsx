@@ -2,7 +2,7 @@ import React from 'react'
 import { motion } from "motion/react"
 import { ACTIONS } from './Calc'
 
-const classProp = 'shadow-xl border text-3xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]'
+const classProp = 'shadow-xl border text-3xl text-[#0E2148] font-mono font-medium rounded-xl w-full bg-[#5459AC] hover:bg-[#648DB3]'
 
 const Button = ({digit, className, dispatch}) => {
     let fullClassName = classProp + ' ' + className;

@@ -141,22 +141,22 @@ const Calc = () => {
                     scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
                 }}
             >
-                <div id="current-operand" className="border p-3 text-base sm:text-xl md:text-3xl font-mono flex flex-col justify-center items-end min-h-24 rounded-xl bg-[#648DB3] break-all">
+                <div id="current-operand" className="border p-3 text-base sm:text-xl md:text-3xl font-mono flex flex-col justify-center items-end h-24 rounded-xl bg-[#648DB3] break-all">
                     <div className="text-gray-600">{formatOperand(previousOperand)} {operation}</div>
                     <div>{formatOperand(currentOperand)}</div>
                 </div>
 
-                <div className="md:h-[50vh] p-2 gap-2 grid grid-cols-4 w-full h-auto bg-[#52357B] rounded-xl border mt-2">
+                <div className="md:h-[70vh] p-2 gap-2 grid grid-cols-4 w-full h-[50vh] bg-[#52357B] rounded-xl border mt-2">
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="col-span-2 shadow-xl border text-base sm:text-xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
+                        className="col-span-2 shadow-xl border text-base sm:text-2xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
                         onClick={() => dispatch({ type: ACTIONS.CLEAR })}
                     >AC</motion.button>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="shadow-xl border text-base sm:text-xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
+                        className="shadow-xl border text-base sm:text-2xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
                         onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}
                     >DEL</motion.button>
                     <OperationButton dispatch={dispatch} operation="/" />
@@ -177,7 +177,7 @@ const Calc = () => {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="col-span-2 shadow-xl border text-base sm:text-xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
+                        className="col-span-2 shadow-xl border text-base sm:text-2xl md:text-2xl text-[#0E2148] font-mono font-medium rounded-xl h-full w-full bg-[#5459AC] hover:bg-[#648DB3]"
                         onClick={() => dispatch({ type: ACTIONS.EVALUATE })}
                     >=</motion.button>
                 </div>
